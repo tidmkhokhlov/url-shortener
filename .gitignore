@@ -1,0 +1,196 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.env
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Package managers
+.pdm-python
+.pdm-build/
+__pypackages__/
+.pixi/
+
+# Build and distribution
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Testing
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+.pytest_cache/
+cover/
+test-results/
+
+# Code quality
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.output/
+.reports/
+
+# Databases
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.backup
+db_dumps/
+*.rdb
+*.aof
+
+# PostgreSQL
+pgdata/
+postgres-data/
+
+# RabbitMQ
+rabbitmq_data/
+mnesia/
+rabbitmq/
+rabbitmq-data/
+
+# Redis
+redis.pid
+redis-data/
+dump.rdb
+appendonly.aof
+
+# FastAPI
+.openapi-cache/
+.openapi.json
+.openapi.yaml
+*.log
+logs/
+uvicorn.log
+gunicorn.log
+staticfiles/
+mediafiles/
+uploads/
+
+# Docker
+.env.docker
+.env.production
+.env.staging
+docker-compose.override.yml
+
+# IDEs
+.idea/
+*.iml
+.ipr
+.iws
+.vscode/
+*.code-workspace
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Project
+tmp/
+temp/
+.tmp/
+.temp/
+artifacts/
+releases/
+deploy/
+data/dev/
+data/test/
+fixtures/dev/
+
+# Docs
+docs/_build/
+docs/_static/
+docs/_templates/
+site/
+_mkdocs/
+
+# Security
+*.key
+*.pem
+*.crt
+*.cer
+*.pfx
+*.p12
+*.jks
+keystore/
+secrets/
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# Git
+.git-credentials
+*.orig
+*.rej
+
+# Config files
+config.py
+config_local.py
+config_development.py
+config_production.py
+config_*.py
+*.config.py
+settings_local.py
+.env.local
+.env.development
+.env.test
+.env.production.local
+.env.staging.local
+config/local.yaml
+config/secrets.yaml
+config/credentials.json
+config/private/
+secrets/
+keys/
+certificates/
