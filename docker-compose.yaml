@@ -2,6 +2,8 @@ services:
   database:
     image: postgres:17
     container_name: db
+    env_file:
+      - .env
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
@@ -14,12 +16,22 @@ services:
   redis:
     image: redis:7-alpine
     container_name: redis
+    env_file:
+      - .env
     ports:
       - "6379:6379"
     volumes:
       - ./redis_data:/data
     command: redis-server --appendonly yes
     restart: unless-stopped
+
+  app:
+    build: .
+    container_name: main_app
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
 
 volumes:
   postgres_data:
