@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>КликСсылка — короткие ссылки как в Яндекс.Клик</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(145deg, #f0f4fa 0%, #e6edf4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .card {
+            max-width: 680px;
+            width: 100%;
+            background: rgba(255,255,255,0.96);
+            border-radius: 48px;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25), 0 8px 18px rgba(0,0,0,0.05);
+            padding: 2rem 2rem 2.2rem;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffffcc;
+            backdrop-filter: blur(4px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+        }
+        .logo-icon {
+            font-size: 2rem;
+        }
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #1e2a3e, #0f2b3d);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .badge {
+            background: #eef2ff;
+            border-radius: 40px;
+            padding: 0.2rem 0.9rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1e40af;
+            display: inline-block;
+            margin-top: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #1e293b;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .url-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 60px;
+            padding: 0.2rem 0.2rem 0.2rem 1rem;
+        }
+        .url-input-wrapper:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+        .url-icon {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-right: 8px;
+        }
+        .url-input {
+            flex: 1;
+            border: none;
+            padding: 0.9rem 0;
+            font-size: 1rem;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+        }
+        .url-input::placeholder {
+            color: #94a3b8;
+        }
+        .btn-shorten {
+            background: linear-gradient(105deg, #1e293b, #0f172a);
+            border: none;
+            border-radius: 50px;
+            padding: 0.85rem 1.8rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+        }
+        .btn-shorten:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(105deg, #0f172a, #020617);
+        }
+        .btn-shorten:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .result-card {
+            margin-top: 2rem;
+            background: #f8fafc;
+            border-radius: 32px;
+            border: 1px solid #eef2ff;
+        }
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2edf7;
+        }
+        .result-header span:first-child {
+            font-weight: 600;
+            color: #0f2b3d;
+        }
+        .copy-badge {
+            background: white;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #2563eb;
+            cursor: pointer;
+            border: 1px solid #cbd5e1;
+        }
+        .copy-badge:hover {
+            background: #eef2ff;
+        }
+        .short-url-display {
+            padding: 0.8rem 1.5rem 1.3rem;
+            word-break: break-all;
+        }
+        .short-link {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #075985;
+            background: #eef2ff;
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            text-decoration: none;
+        }
+        .short-link:hover {
+            text-decoration: underline;
+        }
+        .info-note {
+            font-size: 0.75rem;
+            color: #475569;
+            margin-top: 8px;
+        }
+        .error-message {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 0.8rem 1rem;
+            border-radius: 28px;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        .success-message {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            border-top: 1px solid #e2edf2;
+            padding-top: 1.2rem;
+        }
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .flex-btns {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .example-block {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 0.7rem 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .example-link {
+            color: #2563eb;
+            font-family: monospace;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        @media (max-width: 550px) {
+            .card { padding: 1.5rem; }
+            .btn-shorten {
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
+            .url-input-wrapper {
+                flex-wrap: wrap;
+                border-radius: 32px;
+                padding: 0.5rem;
+            }
+            .flex-btns { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🔗⚡</span>
+            <span class="logo-text">КликСсылка</span>
+        </div>
+        <div class="badge">✨ моментальное сокращение ✨</div>
+    </div>
+
+    <div class="form-group">
+        <label>📎 Длинная ссылка</label>
+        <div class="url-input-wrapper">
+            <span class="url-icon">🌐</span>
+            <input type="url" id="longUrlInput" class="url-input" placeholder="https://yandex.ru или любая ссылка..." autocomplete="off">
+        </div>
+    </div>
+
+    <div class="flex-btns">
+        <button id="shortenBtn" class="btn-shorten">
+            <span>🔗</span> Сократить ссылку
+        </button>
+    </div>
+
+    <div class="example-block">
+        <span>📋 Попробуйте пример:</span>
+        <span id="exampleUrl" class="example-link">https://yandex.ru/search/?text=красивые+короткие+ссылки</span>
+        <span style="font-size:12px; color:#475569;">⬅️ нажмите, чтобы вставить</span>
+    </div>
+
+    <div id="resultArea" class="result-card" style="display: none;">
+        <div class="result-header">
+            <span>✨ Ваша короткая ссылка готова</span>
+            <div id="copyBtn" class="copy-badge">📋 Копировать</div>
+        </div>
+        <div class="short-url-display">
+            <a id="shortLinkAnchor" href="#" target="_blank" class="short-link"></a>
+            <div class="info-note">🔁 Переход по ссылке автоматически перенаправит на исходный URL</div>
+        </div>
+    </div>
+
+    <div id="messageArea"></div>
+
+    <div class="footer">
+        🔥 Сервис вдохновлён Яндекс.Клик — быстрая генерация slug | API на FastAPI
+    </div>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:8000';
+
+    const longUrlInput = document.getElementById('longUrlInput');
+    const shortenBtn = document.getElementById('shortenBtn');
+    const resultArea = document.getElementById('resultArea');
+    const shortLinkAnchor = document.getElementById('shortLinkAnchor');
+    const copyBtn = document.getElementById('copyBtn');
+    const messageArea = document.getElementById('messageArea');
+    const exampleSpan = document.getElementById('exampleUrl');
+
+    function showMessage(text, isError = false, isSuccess = false) {
+        messageArea.innerHTML = '';
+        const div = document.createElement('div');
+        div.className = `error-message ${isSuccess ? 'success-message' : ''}`;
+        const icon = isError ? '⚠️ ' : (isSuccess ? '✅ ' : 'ℹ️ ');
+        div.innerHTML = `${icon} ${text}`;
+        messageArea.appendChild(div);
+        setTimeout(() => {
+            if (messageArea.firstChild === div) {
+                div.style.opacity = '0';
+                setTimeout(() => {
+                    if (messageArea.firstChild === div) div.remove();
+                }, 300);
+            }
+        }, 4000);
+    }
+
+    function clearMessages() {
+        messageArea.innerHTML = '';
+    }
+
+    function setLoading(isLoading) {
+        if (isLoading) {
+            shortenBtn.disabled = true;
+            shortenBtn.innerHTML = `<span class="spinner"></span> Сокращаем...`;
+        } else {
+            shortenBtn.disabled = false;
+            shortenBtn.innerHTML = `<span>🔗</span> Сократить ссылку`;
+        }
+    }
+
+    async function createShortUrl(longUrl) {
+        let urlToSend = longUrl.trim();
+        if (!urlToSend) throw new Error('Введите ссылку');
+
+        if (!urlToSend.startsWith('http://') && !urlToSend.startsWith('https://')) {
+            urlToSend = 'https://' + urlToSend;
+        }
+
+        try {
+            new URL(urlToSend);
+        } catch (e) {
+            throw new Error('Некорректный URL. Пример: https://example.com');
+        }
+
+        const response = await fetch(`${API_URL}/short_url`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ long_url: urlToSend })
+        });
+
+        let data;
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            data = await response.json();
+        } else {
+            const text = await response.text();
+            throw new Error(`Ошибка сервера: ${response.status}`);
+        }
+
+        if (!response.ok) {
+            if (response.status === 409) throw new Error('Конфликт: такой slug уже существует');
+            if (response.status === 422) throw new Error('Неверный формат запроса');
+            throw new Error(data.detail || `Ошибка ${response.status}`);
+        }
+
+        if (data && typeof data.short_url === 'string') return data.short_url;
+        if (data && data.slug) return data.slug;
+        throw new Error('Ответ API не содержит short_url');
+    }
+
+    function getFullShortUrl(slug) {
+        return `${API_URL}/${slug}`;
+    }
+
+    async function handleShorten() {
+        clearMessages();
+        const rawUrl = longUrlInput.value;
+        if (!rawUrl.trim()) {
+            showMessage('Пожалуйста, введите ссылку для сокращения', true);
+            longUrlInput.focus();
+            return;
+        }
+
+        setLoading(true);
+        resultArea.style.display = 'none';
+
+        try {
+            const slug = await createShortUrl(rawUrl);
+            const shortUrlFull = getFullShortUrl(slug);
+            shortLinkAnchor.href = shortUrlFull;
+            shortLinkAnchor.textContent = shortUrlFull;
+            resultArea.style.display = 'block';
+            showMessage('Ссылка успешно сокращена!', false, true);
+            resultArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } catch (err) {
+            console.error(err);
+            let errorText = err.message || 'Не удалось создать короткую ссылку.';
+            if (err instanceof TypeError && err.message.includes('fetch')) {
+                errorText = '⚠️ Не удалось соединиться с API. Убедитесь, что сервер FastAPI запущен на http://localhost:8000';
+            }
+            showMessage(errorText, true);
+            resultArea.style.display = 'none';
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function copyShortLink() {
+        if (!shortLinkAnchor || !shortLinkAnchor.textContent) {
+            showMessage('Нет ссылки для копирования', true);
+            return;
+        }
+        const urlToCopy = shortLinkAnchor.textContent;
+        try {
+            await navigator.clipboard.writeText(urlToCopy);
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '✅ Скопировано!';
+            setTimeout(() => copyBtn.innerHTML = originalText, 2000);
+            showMessage('Ссылка скопирована в буфер обмена', false, true);
+        } catch (err) {
+            showMessage('Не удалось скопировать ссылку', true);
+        }
+    }
+
+    function insertExample() {
+        longUrlInput.value = exampleSpan.innerText.trim();
+        longUrlInput.focus();
+        clearMessages();
+        resultArea.style.display = 'none';
+        showMessage('Пример вставлен, нажмите "Сократить ссылку"', false, true);
+    }
+
+    longUrlInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleShorten();
+        }
+    });
+
+    shortenBtn.addEventListener('click', handleShorten);
+    copyBtn.addEventListener('click', copyShortLink);
+    exampleSpan.addEventListener('click', insertExample);
+
+    if (window.location.protocol === 'file:') {
+        showMessage('⚠️ Внимание: откройте страницу через http://localhost:8000, а не file://', true);
+    } else {
+        console.log(`API ожидается по адресу: ${API_URL}`);
+    }
+</script>
+</body>
+</html>
