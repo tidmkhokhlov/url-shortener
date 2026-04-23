@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     def database_url(self) -> str:
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: str = "6379"
+    REDIS_PASSWORD: str = ""
+    REDIS_DB: str = "0"
+    REDIS_POOL_SIZE: int = 10
+
     CORS_ORIGINS: list[str] = ["http://localhost:63342"]
 
 
