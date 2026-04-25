@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   database:
     image: postgres:17
@@ -5,13 +7,21 @@ services:
     env_file:
       - .env
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${DB_NAME:-postgres}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     ports:
       - "6432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - url_shortener_network
 
   redis:
     image: redis:7-alpine
@@ -23,15 +33,36 @@ services:
     volumes:
       - ./redis_data:/data
     command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 2s
+      timeout: 2s
+      retries: 5
     restart: unless-stopped
+    networks:
+      - url_shortener_network
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: main_app
     env_file:
       - .env
     ports:
       - "8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - url_shortener_network
 
 volumes:
   postgres_data:
+
+networks:
+  url_shortener_network:
+    driver: bridge

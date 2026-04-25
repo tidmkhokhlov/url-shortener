@@ -8,3 +8,7 @@ class LongUrlNotFoundError(ShortenerBaseError):
 
 class SlugAlreadyExistsError(ShortenerBaseError):
     pass
+
+
+class RedisCacheError(ShortenerBaseError):
+    pass

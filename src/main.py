@@ -9,7 +9,7 @@ import src.dependencies as dep
 from src.config import settings
 from src.database.database import Base, SessionDep, engine
 from src.dependencies import RedisDep
-from src.exceptions import LongUrlNotFoundError, SlugAlreadyExistsError
+from src.exceptions import LongUrlNotFoundError, RedisCacheError, SlugAlreadyExistsError
 from src.service import generate_short_url, get_url_by_slug
 
 
@@ -54,8 +54,8 @@ async def redirect_to_url(session: SessionDep, slug: str, redis: RedisDep):
         cached_url = await redis.get(cache_key)
         if cached_url:
             return RedirectResponse(url=cached_url, status_code=status.HTTP_302_FOUND)
-    except Exception:
-        pass
+    except RedisCacheError as e:
+        print(e)
 
     try:
         long_url = await get_url_by_slug(slug, session)
@@ -64,7 +64,7 @@ async def redirect_to_url(session: SessionDep, slug: str, redis: RedisDep):
 
     try:
         await redis.setex(cache_key, 60, long_url)
-    except Exception:
-        pass
+    except RedisCacheError as e:
+        print(e)
 
     return RedirectResponse(url=long_url, status_code=status.HTTP_302_FOUND)
