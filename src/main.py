@@ -1,9 +1,11 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
-from fastapi import Body, FastAPI, HTTPException, status
+from fastapi import Body, Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+from fastapi_limiter.depends import RateLimiter
+from pyrate_limiter import Duration, Limiter, Rate
 
 import src.dependencies as dep
 from src.config import settings
@@ -38,7 +40,7 @@ app.add_middleware(
 )
 
 
-@app.post("/short_url")
+@app.post("/short_url", dependencies=[Depends(RateLimiter(limiter=Limiter(Rate(3, Duration.MINUTE))))])
 async def create_short_url(session: SessionDep, long_url: str = Body(embed=True)):
     try:
         slug = await generate_short_url(long_url, session)
