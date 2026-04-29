@@ -9,7 +9,7 @@ from pyrate_limiter import Duration, Limiter, Rate
 
 import src.dependencies as dep
 from src.config import settings
-from src.database.database import Base, SessionDep, engine
+from src.database.database import SessionDep
 from src.dependencies import RedisDep
 from src.exceptions import LongUrlNotFoundError, RedisCacheError, SlugAlreadyExistsError
 from src.service import generate_short_url, get_url_by_slug
@@ -17,9 +17,6 @@ from src.service import generate_short_url, get_url_by_slug
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
     app.state.redis = await dep.get_redis_client()
     print("Redis connected")
 
