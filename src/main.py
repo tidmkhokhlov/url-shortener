@@ -11,7 +11,7 @@ import src.dependencies as dep
 from src.config import settings
 from src.database.database import SessionDep
 from src.dependencies import RedisDep
-from src.exceptions import LongUrlNotFoundError, RedisCacheError, SlugAlreadyExistsError
+from src.exceptions import LongUrlNotFoundError, SlugAlreadyExistsError
 from src.middleware.request_logger import RequestLoggingMiddleware
 from src.service import generate_short_url, get_url_by_slug
 
@@ -51,22 +51,9 @@ async def create_short_url(session: SessionDep, long_url: str = Body(embed=True)
 
 @app.get("/{slug}")
 async def redirect_to_url(session: SessionDep, slug: str, redis: RedisDep):
-    cache_key = f"url:{slug}"
     try:
-        cached_url = await redis.get(cache_key)
-        if cached_url:
-            return RedirectResponse(url=cached_url, status_code=status.HTTP_302_FOUND)
-    except RedisCacheError as e:
-        print(e)
-
-    try:
-        long_url = await get_url_by_slug(slug, session)
+        long_url = await get_url_by_slug(slug, session, redis)
     except LongUrlNotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND) from e
-
-    try:
-        await redis.setex(cache_key, 60, long_url)
-    except RedisCacheError as e:
-        print(e)
 
     return RedirectResponse(url=long_url, status_code=status.HTTP_302_FOUND)

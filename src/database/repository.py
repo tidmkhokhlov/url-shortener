@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -22,3 +22,9 @@ class URLRepository:
         result = await session.execute(query)
         answer = result.scalar_one_or_none()
         return answer.long_url if answer else None
+
+    @classmethod
+    async def increment_redirects_count(cls, slug: str, session: AsyncSession) -> None:
+        query = update(ShortUrl).where(ShortUrl.slug == slug).values(redirects_count=ShortUrl.redirects_count + 1)
+        await session.execute(query)
+        await session.commit()
