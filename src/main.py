@@ -12,6 +12,7 @@ from src.config import settings
 from src.database.database import SessionDep
 from src.dependencies import RedisDep
 from src.exceptions import LongUrlNotFoundError, RedisCacheError, SlugAlreadyExistsError
+from src.middleware.request_logger import RequestLoggingMiddleware
 from src.service import generate_short_url, get_url_by_slug
 
 
@@ -35,6 +36,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(RequestLoggingMiddleware)
 
 
 @app.post("/short_url", dependencies=[Depends(RateLimiter(limiter=Limiter(Rate(3, Duration.MINUTE))))])

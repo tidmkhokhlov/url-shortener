@@ -8,6 +8,9 @@ env_path = Path(__file__).parent.parent / ".env"
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=str(env_path), case_sensitive=True, extra="ignore")
 
+    DEBAG: bool = False
+    LOG_LEVEL: str = "INFO"
+
     DB_HOST: str = "localhost"
     DB_PORT: str = "6432"
     DB_USER: str = ""
