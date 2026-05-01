@@ -5,7 +5,8 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from src.database.models import Base
-from src.main import app, get_session
+from src.dependencies import get_db
+from src.main import app
 
 engine = create_async_engine("sqlite+aiosqlite:///./test.db")
 
@@ -17,7 +18,7 @@ async def get_test_session() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-app.dependency_overrides[get_session] = get_test_session
+app.dependency_overrides[get_db] = get_test_session
 
 
 @pytest.fixture(scope="session", autouse=True)

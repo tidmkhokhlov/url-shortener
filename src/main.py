@@ -9,8 +9,7 @@ from pyrate_limiter import Duration, Limiter, Rate
 
 import src.dependencies as dep
 from src.config import settings
-from src.database.database import SessionDep
-from src.dependencies import RedisDep
+from src.dependencies import RedisDep, SessionDep
 from src.exceptions import LongUrlNotFoundError, SlugAlreadyExistsError
 from src.middleware.request_logger import RequestLoggingMiddleware
 from src.service import generate_short_url, get_url_by_slug
